@@ -68,9 +68,6 @@ identify_the_operating_system_and_architecture() {
             'riscv64')
                 MACHINE='riscv64'
                 ;;
-            's390x')
-                MACHINE='s390x'
-                ;;
             *)
                 echo "error: The architecture is not supported."
                 exit 1
@@ -317,7 +314,7 @@ download_v2ray() {
     fi
 
     # Verification of V2Ray archive
-    for LISTSUM in 'md5' 'sha1' 'sha256' 'sha512'; do
+    for LISTSUM in 'md5' 'sha1'; do
         SUM="$(${LISTSUM}sum "$ZIP_FILE" | sed 's/ .*//')"
         CHECKSUM="$(grep ${LISTSUM^^} "$ZIP_FILE".dgst | grep "$SUM" -o -a | uniq)"
         if [[ "$SUM" != "$CHECKSUM" ]]; then
@@ -394,7 +391,7 @@ CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
 AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
 NoNewPrivileges=true
 Environment=V2RAY_LOCATION_ASSET=/usr/local/lib/v2ray/
-ExecStart=/usr/local/bin/v2ray -config /etc/v2ray/config.json
+ExecStart=/usr/local/bin/v2ray run -c /etc/v2ray/config.json
 Restart=on-failure
 
 [Install]
@@ -411,7 +408,7 @@ CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
 AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
 NoNewPrivileges=true
 Environment=V2RAY_LOCATION_ASSET=/usr/local/lib/v2ray/
-ExecStart=/usr/local/bin/v2ray -config /etc/v2ray/%i.json
+ExecStart=/usr/local/bin/v2ray run -c /etc/v2ray/%i.json
 Restart=on-failure
 
 [Install]
